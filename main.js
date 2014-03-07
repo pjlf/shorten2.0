@@ -2,6 +2,9 @@
 var shortenColl = new ShortenCollection();
 var shortenViewC = new ShortenViewCollection({collection: shortenColl});
 
+var domain = 'http://api.alfredo.r42.in/';
+// var domain = 'http://localhost:8000/';
+
 function sendURL(){
 	var urlToSend = '';
 
@@ -11,7 +14,7 @@ function sendURL(){
 	urlToSend = 'http://' + $('#urlToSend').val();
 
 	$.ajax({
-		url: 'http://api.alfredo.r42.in/',
+		url: domain,
 		type: 'POST',
 		data: { url: urlToSend },
 		success: function(res) { 
@@ -19,6 +22,7 @@ function sendURL(){
 			console.log('Done! Result:', res) 
 		}
     });
+    socket.emit('newShorten', { msg: 'newShorten: ' + urlToSend });
     $('#urlToSend').val('');
 
 }
@@ -27,8 +31,7 @@ var bodyTabelaURL = null;
 
 function getListURLs(){
 	
-	//$.ajax({url: 'http://kurto.r42.in/recent', success: function(recent) { 
-	$.ajax({url: 'http://api.alfredo.r42.in', success: function(recent) { 
+	$.ajax({url: domain, success: function(recent) { 
 		var shorten;
 		var shortenView;
 
@@ -63,3 +66,12 @@ myTimer = setInterval(getListURLs, 10000);
 
 $('#conteudo').append(shortenViewC.$el);
 
+var socket = io.connect(domain);
+socket.on('saudacoes', function (data) {
+		console.log(data);
+	}
+);
+socket.on('respNewShorten', function(data) {
+	alert('New Shorten');
+	console.log(data);
+})
