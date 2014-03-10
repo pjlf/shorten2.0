@@ -28,6 +28,7 @@ function login(){
 			console.log(token); 
 			$('#divLogin').hide();
 			$('#nomeUser').text(user);
+			$.cookie('alfredosToken', JSON.stringify({user: user, token: token}));
 		},
 		error: function(res){
 			if (res.status === 403)
@@ -109,9 +110,21 @@ function getListURLs(){
 	})
 }
 
+function logout(){
+	$.removeCookie('alfredosToken');
+	restartLogin();
+}
+
+if ($.cookie('alfredosToken')){
+	var cook = JSON.parse($.cookie('alfredosToken'));
+	$('#divLogin').hide();
+	$('#nomeUser').text(cook.user);
+	token = cook.token;
+}
+
 getListURLs();
 // Actualizar lista a cada 30 segundos
- myTimer = setInterval(getListURLs, 10000);
+myTimer = setInterval(getListURLs, 100000);
 
 $('#conteudo').append(shortenViewC.$el);
 
@@ -123,5 +136,5 @@ socket.on('saudacoes', function (data) {
 socket.on('respNewShorten', function(data) {
 	alert('New Shorten');
 	console.log(data);
-	shortenColl.add(shorten);
+	shortenColl.add(data);
 })
