@@ -3,8 +3,8 @@ var shortenColl = new ShortenCollection();
 var shortenViewC = new ShortenViewCollection({collection: shortenColl});
 var token = '';
 
-var domain = 'http://api.alfredo.r42.in/';
-// var domain = 'http://localhost:8000/';
+// var domain = 'http://api.alfredo.r42.in/';
+var domain = 'http://localhost:8000/';
 
 function login(){
 	var user = $('#inputUser').val();
@@ -23,16 +23,18 @@ function login(){
 		type: 'POST',
 		data: { user: user, password: pass },
 		success: function(res) {
-			if(res.erro != ''){
-				alert(res.erro);
-				return;
-			} 
-			token = res.token;
+			token = res;
 			alert('Autenticado');
 			console.log(token); 
 			$('#divLogin').hide();
 			$('#nomeUser').text(user);
-			// $('#idInputShorten').show();
+		},
+		error: function(res){
+			if (res.status === 403)
+				alert(res.responseText);
+			else
+				alert('Erro ao autenticar utilizador.');
+			console.log(res);
 		}
     });
 }
@@ -60,11 +62,13 @@ function sendURL(){
 		data: { url: urlToSend },
 		success: function(res) { 
 			getListURLs();
-			if (res.erro != ''){
-				alert(res.erro);
-				restartLogin();
-			}
 			console.log('Done! Result:', res); 
+		},
+		error: function(res){	
+			console.log(res);
+			alert(res.responseText);
+			if (res.status === 401)
+				restartLogin();		
 		}
     });
     socket.emit('newShorten', { msg: 'newShorten: ' + urlToSend });
