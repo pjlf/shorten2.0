@@ -1,9 +1,47 @@
 
 var shortenColl = new ShortenCollection();
 var shortenViewC = new ShortenViewCollection({collection: shortenColl});
+var token = '';
 
 var domain = 'http://api.alfredo.r42.in/';
 // var domain = 'http://localhost:8000/';
+
+function login(){
+	var user = $('#inputUser').val();
+	var pass = $('#inputPass').val();
+	if (user == ''){
+		alert('Utilizador não preenchido');
+		return;
+	}
+	if (pass == ''){
+		alert('Password não preenchido');
+		return;
+	}
+	// enviar pedido de autenticação
+	$.ajax({
+		url: domain + 'login',
+		type: 'POST',
+		data: { user: user, password: pass },
+		success: function(res) {
+			if(res.erro != ''){
+				alert(res.erro);
+				return;
+			} 
+			token = res.token;
+			alert('Autenticado');
+			console.log(token); 
+			$('#divLogin').hide();
+			$('#nomeUser').text(user);
+			// $('#idInputShorten').show();
+		}
+    });
+}
+
+function restartLogin(){
+	$('#divLogin').show();
+	$('#nomeUser').text('');
+	token = '';
+}
 
 function sendURL(){
 	var urlToSend = '';
@@ -16,10 +54,17 @@ function sendURL(){
 	$.ajax({
 		url: domain,
 		type: 'POST',
+		headers: {
+			"X-Auth-Token": token,
+		},
 		data: { url: urlToSend },
 		success: function(res) { 
 			getListURLs();
-			console.log('Done! Result:', res) 
+			if (res.erro != ''){
+				alert(res.erro);
+				restartLogin();
+			}
+			console.log('Done! Result:', res); 
 		}
     });
     socket.emit('newShorten', { msg: 'newShorten: ' + urlToSend });
@@ -62,7 +107,7 @@ function getListURLs(){
 
 getListURLs();
 // Actualizar lista a cada 30 segundos
-myTimer = setInterval(getListURLs, 10000);
+myTimer = setInterval(getListURLs, 60000);
 
 $('#conteudo').append(shortenViewC.$el);
 

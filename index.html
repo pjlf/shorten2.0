@@ -10,6 +10,14 @@
 	</head>
 	<body>
 		<div class="container">
+			<h3 id="nomeUser"></h3>
+			<div id="divLogin" class="input-group">
+				<span>User: </span> <input type="text" class="form-control" id="inputUser">
+				<span>Password: </span> <input type="password" class="form-control" id="inputPass">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" onClick="login()">Login</button>
+				</span>
+			</div>
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title"><a href="index.html">Encurtador</a></h3>
@@ -20,7 +28,8 @@
 							<h3 class="panel-title">Create a new shortened url</h3>
 						</div>
 						<div class="panel-body" id="conteudo">
-							<div class="input-group">
+							<!-- <div class="input-group" id="idInputShorten" style="display:none"> -->
+							<div class="input-group" id="idInputShorten">
 						    	<input type="text" class="form-control" id="urlToSend">
 						    	<span class="input-group-btn">
 						        	<button class="btn btn-default" type="button" onClick="sendURL()">Shorten!</button>
