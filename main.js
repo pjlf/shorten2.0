@@ -3,8 +3,8 @@ var shortenColl = new ShortenCollection();
 var shortenViewC = new ShortenViewCollection({collection: shortenColl});
 var token = '';
 
-// var domain = 'http://api.alfredo.r42.in/';
-var domain = 'http://localhost:8000/';
+var domain = 'http://api.alfredo.r42.in/';
+// var domain = 'http://localhost:8000/';
 
 function login(){
 	var user = $('#inputUser').val();
