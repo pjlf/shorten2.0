@@ -51,7 +51,7 @@ function sendURL(){
 	if ($('#urlToSend').val() == '')
 		return;
 
-	urlToSend = 'http://' + $('#urlToSend').val();
+	urlToSend = 'http://' + $('#urlToSend').val().replace(/<\/?[^>]+(>|$)/g, "");;
 
 	$.ajax({
 		url: domain,
@@ -111,7 +111,7 @@ function getListURLs(){
 
 getListURLs();
 // Actualizar lista a cada 30 segundos
-myTimer = setInterval(getListURLs, 60000);
+ myTimer = setInterval(getListURLs, 10000);
 
 $('#conteudo').append(shortenViewC.$el);
 
@@ -123,4 +123,5 @@ socket.on('saudacoes', function (data) {
 socket.on('respNewShorten', function(data) {
 	alert('New Shorten');
 	console.log(data);
+	shortenColl.add(shorten);
 })

@@ -1,6 +1,7 @@
 
 var ShortenView = Backbone.View.extend({
 
+	tagName: "tr",
 	template: _.template($('#listaURLs').html()),
 	//template: '',
 
@@ -9,14 +10,14 @@ var ShortenView = Backbone.View.extend({
 	},
 
 	render: function(){
-		
-		var elem = $('<tr>');
 		var col1 = $('<td>');
 		var col2 = $('<td>');
 		var link1 = $('<a>');
 		var link2 = $('<a>');
 
-		elem.attr("id", this.model.get('id'));
+		this.$el.empty();
+
+		this.$el.attr("id", this.model.get('id'));
 
 		link1.attr("href", this.model.get('shortURL'));
 		link1.attr("target", "_blank");
@@ -41,10 +42,10 @@ var ShortenView = Backbone.View.extend({
 		link2.html(this.model.get('originalURL'));
 		col2.append(link2);
 
-		elem.append(col1);
-		elem.append(col2);
+		this.$el.append(col1);
+		this.$el.append(col2);
 
-		this.setElement(elem);
+		// this.setElement(this.$el);
 
 		return this;
 	}
